@@ -22,6 +22,7 @@ dependencies {
     implementation("org.zalando:zally-ruleset-zalando:2.0.0")
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
+    testImplementation("org.assertj:assertj-core:3.20.2")
     testRuntimeOnly ("org.junit.jupiter:junit-jupiter-engine:5.4.2")
 }
 
@@ -43,4 +44,4 @@ tasks{
 (tasks.findByName("test") as Test).useJUnitPlatform()
 
 group="org.thiyagu.zally"
-version= "0.2.0-zally-maven-central"
+version= "0.0.1-SNAPSHOT"
