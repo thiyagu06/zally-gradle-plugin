@@ -43,7 +43,7 @@ zallyLint {
 
 - [ ] export violation report as html
 
-- [ ] add ktlint and detekt to improve code quality
+- [x] add ktlint and detekt to improve code quality
 
 - [ ] add jacoco for test coverage
 
