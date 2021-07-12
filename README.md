@@ -33,20 +33,20 @@ zallyLint {
 
 ```
 
-TODO
+### TODO
 
-[ ] write unit test
+- [ ] write unit test
 
-[ ] export violation report as html
+- [ ] export violation report as html
 
-[ ] add ktlint and detekt to improve code quality
+- [ ] add ktlint and detekt to improve code quality
 
-[ ] add jacoco for test coverage
+- [ ] add jacoco for test coverage
 
-[ ] publish to maven central
+- [ ] publish to maven central
 
-[ ] allow plugin to define threshold for SHOULD and MUST severity violations. If threshold breaches, build should fail
+- [ ] allow plugin to define threshold for SHOULD and MUST severity violations. If threshold breaches, build should fail
 
-[ ] improve exception handling wherever possible (e.g file operations)
+- [ ] improve exception handling wherever possible (e.g file operations)
 
-[ ] release script
+- [ ] release script
