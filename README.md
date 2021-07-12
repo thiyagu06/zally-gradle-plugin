@@ -19,13 +19,17 @@ pluginManagement {
 
 // build.gradke.kts
 plugins {
-    id("org.thiyagu.zally") version "0.0.2-SNAPSHOT"
+    id("org.thiyagu.zally") version "0.0.3-SNAPSHOT"
 }
 
 zallyLint {
-    inputSpec = "${projectDir}/spec.yml"
-    reportDir = "$rootDir/zally"
-    reportFormats = arrayOf(JSON)
+    inputSpec = File("${projectDir}/docs/petstore-spec.yml")
+    reports {
+        json {
+            enabled = true
+            destination = File("${rootDir}/zally/violation.json")
+        }
+    }
 }
 
 //execute task
