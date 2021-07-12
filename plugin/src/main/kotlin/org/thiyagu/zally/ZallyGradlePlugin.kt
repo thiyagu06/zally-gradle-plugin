@@ -1,7 +1,7 @@
 package org.thiyagu.zally
 
-import org.gradle.api.Project
 import org.gradle.api.Plugin
+import org.gradle.api.Project
 import org.thiyagu.zally.internal.ZallyExtension
 import org.thiyagu.zally.internal.ZallyLintTask
 
