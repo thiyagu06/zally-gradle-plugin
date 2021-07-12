@@ -2,10 +2,10 @@ package org.thiyagu.zally.reports
 
 object ReportFactory {
 
-    fun getReporter(format: ReportFormat): Reporter {
+    fun getReporter(format: ZallyReportType): Reporter {
         return when (format) {
-            ReportFormat.JSON -> JsonReporter()
-            ReportFormat.CONSOLE -> ConsoleReporter()
+            ZallyReportType.JSON -> JsonReporter()
+            else -> throw IllegalArgumentException("the ${format.extension} is not supported")
         }
     }
 }
