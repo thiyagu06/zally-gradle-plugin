@@ -47,3 +47,7 @@ tasks{
 
 group="org.thiyagu.zally"
 version= "0.0.3-SNAPSHOT"
+
+detekt {
+    autoCorrect = true
+}

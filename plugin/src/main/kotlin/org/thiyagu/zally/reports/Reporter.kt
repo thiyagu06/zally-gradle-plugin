@@ -10,6 +10,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 interface Reporter {
+    @Suppress("TooGenericExceptionCaught")
     fun write(violations: List<Result>, filePath: Path) {
         try {
             val reportData = render(violations)
@@ -27,7 +28,11 @@ interface Reporter {
         } catch (e: Exception) {
             println(
                 colorize(
-                    "could write violation report ${filePath.fileName} at ${filePath.toAbsolutePath()},error=${e.message}",
+                    """
+                    "could write violation report ${filePath.fileName} 
+                    at ${filePath.toAbsolutePath()}
+                    ,error=${e.message}"    
+                    """.trimIndent(),
                     BOLD(), BRIGHT_RED_TEXT()
                 )
             )
