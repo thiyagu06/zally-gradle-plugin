@@ -21,7 +21,7 @@ class ZallyGradlePluginTest {
                            id("org.thiyagu.zally")
                         }
                         zallyLint {
-                            inputSpecUrl = "https://raw.githubusercontent.com/zalando/zally/master/examples/sample_swagger_api.yaml"
+                            inputSpec = File("spec.yml")
                         }
                         """
             )

@@ -2,13 +2,15 @@ package org.thiyagu.zally
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.thiyagu.zally.internal.ZallyExtension
+import org.thiyagu.zally.internal.ZallyLint
 import org.thiyagu.zally.internal.ZallyLintTask
+import org.thiyagu.zally.reports.ZallyReport
+import java.io.File
 
 class ZallyGradlePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.extensions.run {
-            create("zallyLint", ZallyExtension::class.java)
+            create("zallyLint", ZallyLint::class.java)
         }
         with(project.tasks) {
             create("zallyLint", ZallyLintTask::class.java) {
