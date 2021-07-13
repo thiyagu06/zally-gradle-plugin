@@ -4,7 +4,11 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.4.31"
     id("maven-publish")
     id("io.gitlab.arturbosch.detekt") version "1.17.1"
+    id("com.github.ben-manes.versions") version "0.20.0"
+    id("org.jetbrains.dokka") version "1.5.0"
     jacoco
+    `maven-publish`
+    signing
 }
 
 repositories {
@@ -26,7 +30,7 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
     testImplementation("org.assertj:assertj-core:3.20.2")
-    testRuntimeOnly ("org.junit.jupiter:junit-jupiter-engine:5.4.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.2")
 }
 
 gradlePlugin {
@@ -38,7 +42,7 @@ gradlePlugin {
     }
 }
 
-tasks{
+tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "15"
     }
@@ -68,9 +72,72 @@ tasks.jacocoTestReport {
 
 (tasks.findByName("test") as Test).useJUnitPlatform()
 
-group="org.thiyagu.zally"
-version= "0.0.3-SNAPSHOT"
-
-detekt {
-    autoCorrect = true
+tasks.jar {
+    archiveBaseName.set(rootProject.name)
 }
+
+tasks.register("javadocJar", Jar::class) {
+    dependsOn(tasks["dokkaJavadoc"])
+    archiveClassifier.set("javadoc")
+    from(tasks["dokkaJavadoc"])
+}
+
+tasks.register("sourcesJar", Jar::class) {
+    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allSource)
+}
+
+artifacts {
+    add("archives", tasks["javadocJar"])
+    add("archives", tasks["sourcesJar"])
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+            pom {
+                description.set("OpenAPI linter service")
+                url.set("https://github.com/thiyagu06/zally-gradle-plugin")
+                name.set("Gradle plugin for zally Linter")
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://opensource.org/licenses/MIT")
+                    }
+                }
+                developers {
+                    developer {
+                        name.set("Thiyagu GK")
+                        email.set("thiyagu103@gmail.com")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/thiyagu06/zally-gradle-plugin.git")
+                    developerConnection.set("scm:git:ssh://github.com:thiyagu06/zally-gradle-plugin.git")
+                    url.set("https://github.com/thiyagu06/zally-gradle-plugin/tree/main")
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            val releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            val snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
+            credentials {
+                // defined in travis project settings or in $HOME/.gradle/gradle.properties
+                username = System.getenv("OSSRH_JIRA_USERNAME")
+                password = System.getenv("OSSRH_JIRA_PASSWORD")
+            }
+        }
+    }
+}
+
+signing {
+    sign(publishing.publications["mavenJava"])
+}
+
+group = "org.thiyagu.zally"
