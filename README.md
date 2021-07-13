@@ -39,13 +39,13 @@ zallyLint {
 
 ### TODO
 
-- [ ] write unit test
+- [x] write unit test
 
 - [ ] export violation report as html
 
 - [x] add ktlint and detekt to improve code quality
 
-- [ ] add jacoco for test coverage
+- [x] add jacoco for test coverage
 
 - [ ] publish to maven central
 
@@ -54,3 +54,5 @@ zallyLint {
 - [ ] improve exception handling wherever possible (e.g file operations)
 
 - [ ] release script
+
+- [ ] configure travis/circleci
