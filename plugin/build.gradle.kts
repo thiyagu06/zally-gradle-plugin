@@ -4,6 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.4.31"
     id("maven-publish")
     id("io.gitlab.arturbosch.detekt") version "1.17.1"
+    jacoco
 }
 
 repositories {
@@ -41,6 +42,28 @@ tasks{
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "15"
     }
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("jacoco"))
+        xml.outputLocation.set(file("$buildDir/jacoco/jacocoTestReport.xml"))
+    }
+    classDirectories.setFrom(
+        sourceSets.main.get().output.asFileTree.matching {
+            exclude("org/thiyagu/zally/internal/ZallyLint.class")
+            exclude("org/thiyagu/zally/internal/ZallyFactory.class")
+            exclude("org/thiyagu/zally/reports/ZallyReport.class")
+            exclude("org/thiyagu/zally/reports/ZallyReportType.class")
+            exclude()
+        }
+    )
+    dependsOn(tasks.test) // tests are required to run before generating the report
 }
 
 (tasks.findByName("test") as Test).useJUnitPlatform()

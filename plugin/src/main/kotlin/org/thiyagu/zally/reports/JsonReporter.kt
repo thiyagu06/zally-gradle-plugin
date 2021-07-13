@@ -5,5 +5,7 @@ import org.zalando.zally.core.Result
 
 class JsonReporter : Reporter {
     private val objectMapper = jacksonObjectMapper().writerWithDefaultPrettyPrinter()
-    override fun render(violations: List<Result>): String = objectMapper.writeValueAsString(violations)
+    override fun render(violations: List<Result>): String? {
+        return if (violations.isNotEmpty()) objectMapper.writeValueAsString(violations) else null
+    }
 }
