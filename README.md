@@ -57,4 +57,4 @@ zallyLint {
 
 - [ ] configure travis/circleci
 
-- [ ] create sample project for different usage
+- [x] create sample project to showcase the plugin
