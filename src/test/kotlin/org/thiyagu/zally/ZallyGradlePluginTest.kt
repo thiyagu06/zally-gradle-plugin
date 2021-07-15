@@ -8,10 +8,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.thiyagu.zally.internal.ZallyLintTask
 import java.io.File
-import kotlin.test.Ignore
 import kotlin.test.assertTrue
 
-@Ignore
+
 class ZallyGradlePluginTest {
 
     @Test
@@ -36,7 +35,7 @@ class ZallyGradlePluginTest {
             writeText(
                 """
                         plugins {
-                           id("org.thiyagu.zally")
+                           id("io.github.thiyagu06")
                         }
                         zallyLint {
                             inputSpec = File("${tempDir}/notitle.yml")
@@ -60,7 +59,7 @@ class ZallyGradlePluginTest {
     @Test
     fun `should successfully register the task`() {
         val project = ProjectBuilder.builder().build()
-        project.pluginManager.apply("org.thiyagu.zally")
+        project.pluginManager.apply("io.github.thiyagu06")
 
         assertTrue(project.tasks.getByName("zallyLint") is ZallyLintTask)
     }
@@ -71,7 +70,7 @@ class ZallyGradlePluginTest {
             writeText(
                 """
                         plugins {
-                           id("org.thiyagu.zally")
+                           id("io.github.thiyagu06")
                         }
                         zallyLint {
                         }
@@ -110,7 +109,7 @@ class ZallyGradlePluginTest {
             writeText(
                 """
                         plugins {
-                           id("org.thiyagu.zally")
+                           id("io.github.thiyagu06")
                         }
                         zallyLint {
                             inputSpec = File("${tempDir}/notitle.yml")
@@ -154,7 +153,7 @@ class ZallyGradlePluginTest {
             writeText(
                 """
                         plugins {
-                           id("org.thiyagu.zally")
+                           id("io.github.thiyagu06")
                         }
                         zallyLint {
                             inputSpec = File("${tempDir}/notitle.yml")
@@ -180,6 +179,114 @@ class ZallyGradlePluginTest {
             .build()
         val violationFile = File(tempDir, "violation.json")
         assertTrue { violationFile.exists() }
+        assertThat(buildResult.task(":zallyLint")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
+    }
+
+    @Test
+    fun `should print violation in html file when enabled`(@TempDir tempDir: File) {
+        val spec = """
+    swagger: "2.0"
+    info:
+      description: Test Description
+      version: "1.0.0"
+      contact:
+        name: John Smith
+        email: smith@example.com
+    paths:
+      /articles:
+        get:
+          summary: returns list of articles
+          responses:
+            200:
+              description: Success
+            """.trimIndent()
+        File(tempDir, "build.gradle.kts").run {
+            writeText(
+                """
+                        plugins {
+                           id("io.github.thiyagu06")
+                        }
+                        zallyLint {
+                            inputSpec = File("${tempDir}/notitle.yml")
+                            reports{
+                                html {
+                                    enabled = true
+                                    destination = File("${tempDir}/violation.html")
+                                }
+                            }
+                        }
+                        """
+            )
+        }
+        File(tempDir, "notitle.yml").apply {
+            parentFile.mkdirs()
+            createNewFile()
+            appendText(spec)
+        }
+        val buildResult = GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("zallyLint")
+            .build()
+        val violationFile = File(tempDir, "violation.html")
+        assertTrue { violationFile.exists() }
+        assertThat(buildResult.task(":zallyLint")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
+    }
+
+    @Test
+    fun `should print violation in both json and html file when enabled`(@TempDir tempDir: File) {
+        val spec = """
+    swagger: "2.0"
+    info:
+      description: Test Description
+      version: "1.0.0"
+      contact:
+        name: John Smith
+        email: smith@example.com
+    paths:
+      /articles:
+        get:
+          summary: returns list of articles
+          responses:
+            200:
+              description: Success
+            """.trimIndent()
+        File(tempDir, "build.gradle.kts").run {
+            writeText(
+                """
+                        plugins {
+                           id("io.github.thiyagu06")
+                        }
+                        zallyLint {
+                            inputSpec = File("${tempDir}/notitle.yml")
+                            reports{
+                                html {
+                                    enabled = true
+                                    destination = File("${tempDir}/violation.html")
+                                }
+                                json {
+                                    enabled = true
+                                    destination = File("${tempDir}/violation.json")
+                                }
+                            }
+                        }
+                        """
+            )
+        }
+        File(tempDir, "notitle.yml").apply {
+            parentFile.mkdirs()
+            createNewFile()
+            appendText(spec)
+        }
+        val buildResult = GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("zallyLint")
+            .build()
+        val violationsHtmlFile = File(tempDir, "violation.html")
+        assertTrue { violationsHtmlFile.exists() }
+        val violationsJsonFile = File(tempDir, "violation.json")
+        assertTrue { violationsJsonFile.exists() }
         assertThat(buildResult.task(":zallyLint")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }
 }
