@@ -84,6 +84,54 @@ jobs:
           root: ~/project
           paths:
             - .
+  publish:
+    executor: build_env
+    environment:
+      JAVA_HOME: /usr/lib/jvm/jdk-13
+    steps:
+      - checkout
+      - attach_workspace:
+          <<: *attach_root
+      - restore_cache:
+          name: Restore JDK13 cached
+          keys:
+            - v1-jdk13
+      - run: *install_java13
+      - restore_cache: *restore_gradle_binary
+      - restore_cache: *restore_dep_cache
+      - run:
+          name: import gpg key
+          command: echo -e "$GPG_KEY" | gpg --import
+      - run:
+          name: publish to sonatype
+          command: ./gradlew publish -Psigning.keyId="$GPG_KEY_ID" -Psigning.password="$GPG_PASSPHRASE"
+            -Psigning.secretKeyRingFile=/home/circleci/.gnupg/secring.gpg -PossrhUsername="$SONATYPE_USERNAME"
+            -PossrhPassword="$SONATYPE_PASSWORD"
+      - save_cache: *save_jdk_cache
+      - save_cache: *save_dep_cache
+      - save_cache: *save_gradle_binary
+
+  release:
+    executor: build_env
+    environment:
+      JAVA_HOME: /usr/lib/jvm/jdk-13
+    steps:
+      - checkout
+      - attach_workspace:
+          <<: *attach_root
+      - restore_cache:
+          name: Restore JDK13 cached
+          keys:
+            - v1-jdk13
+      - run: *install_java13
+      - restore_cache: *restore_gradle_binary
+      - restore_cache: *restore_dep_cache
+      - run:
+          name: close and release in sonatype
+          command: ./gradlew closeAndReleaseRepository -PossrhUsername="$SONATYPE_USERNAME" -PossrhPassword="$SONATYPE_PASSWORD"
+      - save_cache: *save_jdk_cache
+      - save_cache: *save_dep_cache
+      - save_cache: *save_gradle_binary
 
 workflows:
   version: 2
@@ -91,3 +139,18 @@ workflows:
     jobs:
       - build:
           context: Java
+      - publish:
+          context: Java
+          filters:
+            branches:
+              only: /.*(release|RELEASE)-\d+.*/
+          requires:
+            - build
+      - releaseApproval:
+          type: approval
+          requires:
+            - publish
+      - release:
+          context: Java
+          requires:
+            - releaseApproval
