@@ -56,3 +56,5 @@ zallyLint {
 - [ ] release script
 
 - [ ] configure travis/circleci
+
+- [ ] create sample project for different usage
