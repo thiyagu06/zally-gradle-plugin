@@ -19,7 +19,7 @@ pluginManagement {
 
 // build.gradke.kts
 plugins {
-    id("org.thiyagu.zally") version "0.0.3-SNAPSHOT"
+    id("io.github.thiyagu06") version "1.0.2-dev"
 }
 
 zallyLint {
@@ -41,7 +41,7 @@ zallyLint {
 
 - [x] write unit test
 
-- [ ] export violation report as html
+- [x] export violation report as html
 
 - [x] add ktlint and detekt to improve code quality
 
@@ -51,7 +51,7 @@ zallyLint {
 
 - [ ] allow plugin to define threshold for SHOULD and MUST severity violations. If threshold breaches, build should fail
 
-- [ ] improve exception handling wherever possible (e.g file operations)
+- [x] improve exception handling wherever possible (e.g file operations)
 
 - [ ] release script
 
