@@ -104,9 +104,9 @@ jobs:
           command: echo -e "$GPG_KEY" | gpg --import
       - run:
           name: publish to sonatype
-          command: ./gradlew publish -Psigning.keyId="$GPG_KEY_ID" -Psigning.password="$GPG_PASSPHRASE"
-            -Psigning.secretKeyRingFile=/home/circleci/.gnupg/secring.gpg -PossrhUsername="$SONATYPE_USERNAME"
-            -PossrhPassword="$SONATYPE_PASSWORD"
+          command: ./gradlew publish -Psigning.keyId="$GPG_KEY_ID"
+            -Psigning.secretKeyRingFile=/home/circleci/.gnupg/secring.gpg -PnexusUsername="$SONATYPE_USERNAME"
+            -PnexusPassword="$SONATYPE_PASSWORD"
       - save_cache: *save_jdk_cache
       - save_cache: *save_dep_cache
       - save_cache: *save_gradle_binary
@@ -128,7 +128,7 @@ jobs:
       - restore_cache: *restore_dep_cache
       - run:
           name: close and release in sonatype
-          command: ./gradlew closeAndReleaseRepository -PossrhUsername="$SONATYPE_USERNAME" -PossrhPassword="$SONATYPE_PASSWORD"
+          command: ./gradlew closeAndReleaseRepository -PnexusUsername="$SONATYPE_USERNAME" -PnexusPassword="$SONATYPE_PASSWORD"
       - save_cache: *save_jdk_cache
       - save_cache: *save_dep_cache
       - save_cache: *save_gradle_binary
