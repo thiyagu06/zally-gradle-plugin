@@ -1,11 +1,10 @@
-
 plugins {
     `java-gradle-plugin`
     id("org.jetbrains.kotlin.jvm") version "1.4.31"
-    id("maven-publish")
     id("io.gitlab.arturbosch.detekt") version "1.17.1"
     id("com.github.ben-manes.versions") version "0.20.0"
     id("org.jetbrains.dokka") version "1.5.0"
+    id("io.codearte.nexus-staging") version "0.30.0"
     jacoco
     `maven-publish`
     signing
@@ -16,6 +15,8 @@ repositories {
     jcenter()
     mavenLocal()
 }
+
+val projectName = "zally-gradle-plugin"
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -35,12 +36,13 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        create("zallyLint") {
-            id = "org.thiyagu.zally"
+        register("zallyLint") {
+            id = "io.github.thiyagu06"
             implementationClass = "org.thiyagu.zally.ZallyGradlePlugin"
         }
     }
 }
+
 
 tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
@@ -76,48 +78,28 @@ tasks.jar {
     archiveBaseName.set(rootProject.name)
 }
 
-tasks.register("javadocJar", Jar::class) {
-    dependsOn(tasks["dokkaJavadoc"])
-    archiveClassifier.set("javadoc")
-    from(tasks["dokkaJavadoc"])
-}
-
-tasks.register("sourcesJar", Jar::class) {
-    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+val sourcesJar by tasks.creating(Jar::class) {
     archiveClassifier.set("sources")
-    from(sourceSets["main"].allSource)
+    from(sourceSets.getByName("main").allSource)
 }
 
-artifacts {
-    add("archives", tasks["javadocJar"])
-    add("archives", tasks["sourcesJar"])
+val javadocJar by tasks.creating(Jar::class) {
+    archiveClassifier.set("javadoc")
+    from("$buildDir/reports/javadoc")
 }
 
 publishing {
+
     publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            pom {
-                description.set("OpenAPI linter service")
-                url.set("https://github.com/thiyagu06/zally-gradle-plugin")
-                name.set("Gradle plugin for zally Linter")
-                licenses {
-                    license {
-                        name.set("MIT License")
-                        url.set("https://opensource.org/licenses/MIT")
-                    }
-                }
-                developers {
-                    developer {
-                        name.set("Thiyagu GK")
-                        email.set("thiyagu103@gmail.com")
-                    }
-                }
-                scm {
-                    connection.set("scm:git:git://github.com/thiyagu06/zally-gradle-plugin.git")
-                    developerConnection.set("scm:git:ssh://github.com:thiyagu06/zally-gradle-plugin.git")
-                    url.set("https://github.com/thiyagu06/zally-gradle-plugin/tree/main")
-                }
+        create<MavenPublication>("pluginMaven") {
+            artifactId = projectName
+            artifact(sourcesJar)
+            artifact(javadocJar)
+            setPomDetails(this)
+        }
+        afterEvaluate{
+            named<MavenPublication>("zallyLintPluginMarkerMaven") {
+                setPomDetails(this)
             }
         }
     }
@@ -129,15 +111,40 @@ publishing {
             url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
             credentials {
                 // defined in travis project settings or in $HOME/.gradle/gradle.properties
-                username = System.getenv("OSSRH_JIRA_USERNAME")
-                password = System.getenv("OSSRH_JIRA_PASSWORD")
+                username = ""
+                password = ""
             }
         }
     }
 }
 
-signing {
+/*signing {
     sign(publishing.publications["mavenJava"])
+}*/
+
+fun setPomDetails(mavenPublication: MavenPublication) {
+    mavenPublication.pom {
+        description.set("OpenAPI linter service")
+        url.set("https://github.com/thiyagu06/zally-gradle-plugin")
+        name.set("Gradle plugin for zally Linter")
+        licenses {
+            license {
+                name.set("MIT License")
+                url.set("https://opensource.org/licenses/MIT")
+            }
+        }
+        developers {
+            developer {
+                name.set("Thiyagu GK")
+                email.set("thiyagu103@gmail.com")
+            }
+        }
+        scm {
+            connection.set("scm:git:git://github.com/thiyagu06/zally-gradle-plugin.git")
+            developerConnection.set("scm:git:ssh://github.com:thiyagu06/zally-gradle-plugin.git")
+            url.set("https://github.com/thiyagu06/zally-gradle-plugin/tree/main")
+        }
+    }
 }
 
-group = "org.thiyagu.zally"
+group = "io.github.thiyagu06"

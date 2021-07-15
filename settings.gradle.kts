@@ -8,4 +8,3 @@
  */
 
 rootProject.name = "zally-gradle-plugin"
-include("plugin")
