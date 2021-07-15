@@ -14,6 +14,7 @@ repositories {
     mavenCentral()
     jcenter()
     mavenLocal()
+    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") }
 }
 
 val projectName = "zally-gradle-plugin"
@@ -33,6 +34,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
     testImplementation("org.assertj:assertj-core:3.20.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.2")
 }
 
 gradlePlugin {

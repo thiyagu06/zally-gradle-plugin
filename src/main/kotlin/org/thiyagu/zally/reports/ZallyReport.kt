@@ -10,7 +10,7 @@ class ZallyReport(val reportType: ZallyReportType) {
 
 }
 
-enum class ZallyReportType(val extension: String) {
+enum class ZallyReportType(private val extension: String) {
 
     JSON("json"),
     HTML("html");
