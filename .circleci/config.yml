@@ -1,0 +1,93 @@
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.5
+executors:
+  build_env:
+    machine:
+      image: ubuntu-1604:201903-01
+commons:
+  defaults: &defaults
+    persist: &persist
+      root: ~/project
+    attach_root: &attach_root
+      at: ~/project
+aliases:
+  - &restore_dep_cache
+    name: Restore the dependency cache
+    keys:
+      - gradle-cache-{{ checksum "build.gradle.kts" }}-{{ checksum "gradle.properties" }}
+      - gradle-cache-{{ checksum "build.gradle.kts" }}-
+      - gradle-cache-
+  - &save_dep_cache
+    name: Save the dependency cache
+    key: gradle-cache-{{ checksum "build.gradle.kts" }}-{{ checksum "gradle.properties" }}
+    paths:
+      - ~/.gradle/caches/modules-2/files-2.1/
+    when: always
+  - &save_gradle_binary
+    name: Save the Gradle binary
+    key: gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+    paths:
+      - ~/.gradle/wrapper
+    when: always
+  - &restore_gradle_binary
+    name: Restore the Gradle binary
+    keys:
+      - gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - gradle-wrapper-
+  - &install_java13
+    name: install JDK13
+    command: |
+      if ! [ -f ~/openjdk-13_linux-x64_bin.tar.gz ]; then
+        cd ~
+        wget https://download.java.net/java/GA/jdk13/5b8a42f3905b406298b72d750b6919f6/33/GPL/openjdk-13_linux-x64_bin.tar.gz
+        echo "5f547b8f0ffa7da517223f6f929a5055d749776b1878ccedbd6cc1334f4d6f4d openjdk-13_linux-x64_bin.tar.gz" > jdk-13-checksum.txt
+        sha256sum -c jdk-13-checksum.txt
+      fi
+      cd /usr/lib/jvm
+      sudo tar xzf ~/openjdk-13_linux-x64_bin.tar.gz
+  - &save_jdk_cache
+    name: cache JDK installation
+    key:  v1-jdk13
+    paths:
+      - ~/openjdk-13_linux-x64_bin.tar.gz
+jobs:
+  build:
+    executor: build_env
+    environment:
+      JAVA_HOME: /usr/lib/jvm/jdk-13
+    steps:
+      - checkout
+      - attach_workspace:
+          <<: *attach_root
+      - restore_cache:
+          name: Restore JDK13 cached
+          keys:
+            - v1-jdk13
+      - run: *install_java13
+      - restore_cache: *restore_gradle_binary
+      - restore_cache: *restore_dep_cache
+      - run:
+          name: Build and test the code
+          command: ./gradlew clean build test
+      - save_cache: *save_jdk_cache
+      - save_cache: *save_dep_cache
+      - save_cache: *save_gradle_binary
+      - codecov/upload:
+          file:   ~/project/build/reports/jacoco/jacoco*.xml
+      - store_test_results:
+          path: ~/project/build/test-results
+          when: always
+      - store_artifacts:
+          path: ~/project/build/reports/jacoco
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          context: Java
