@@ -9,3 +9,5 @@ build
 out/
 
 *.iml
+
+*gpg

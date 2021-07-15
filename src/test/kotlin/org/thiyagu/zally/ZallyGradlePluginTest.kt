@@ -8,8 +8,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.thiyagu.zally.internal.ZallyLintTask
 import java.io.File
+import kotlin.test.Ignore
 import kotlin.test.assertTrue
 
+@Ignore
 class ZallyGradlePluginTest {
 
     @Test
