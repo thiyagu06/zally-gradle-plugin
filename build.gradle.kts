@@ -17,12 +17,13 @@ repositories {
 }
 
 val projectName = "zally-gradle-plugin"
+val nexusUsername: String by project
+val nexusPassword: String by project
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     testImplementation(kotlin("test"))
-    implementation("org.springframework:spring-context:5.3.8")
     implementation("org.zalando:zally-core:2.0.0")
     implementation("org.zalando:zally-ruleset-zally:2.0.0")
     implementation("org.zalando:zally-ruleset-zalando:2.0.0")
@@ -111,16 +112,16 @@ publishing {
             url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
             credentials {
                 // defined in travis project settings or in $HOME/.gradle/gradle.properties
-                username = ""
-                password = ""
+                username = nexusUsername
+                password = nexusPassword
             }
         }
     }
 }
 
-/*signing {
-    sign(publishing.publications["mavenJava"])
-}*/
+signing {
+    sign(publishing.publications)
+}
 
 fun setPomDetails(mavenPublication: MavenPublication) {
     mavenPublication.pom {
