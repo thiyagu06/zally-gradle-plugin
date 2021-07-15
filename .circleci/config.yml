@@ -143,17 +143,14 @@ workflows:
           context: Java
           filters:
             branches:
-              only: master
+              only: /.*(release|RELEASE)-\d+.*/
           requires:
             - build
       - releaseApproval:
           type: approval
-          filters:
-            branches:
-              only: /.*(release|RELEASE)-\d+.*/
           requires:
             - publish
-      release:
-        context: Java
-        requires:
-          - releaseApproval
+      - release:
+          context: Java
+          requires:
+            - releaseApproval
