@@ -1,6 +1,19 @@
 # zally-gradle-plugin
+[![CircleCI](https://circleci.com/gh/thiyagu06/zally-gradle-plugin/tree/main.svg?style=shield)](https://circleci.com/gh/thiyagu06/zally-gradle-plugin/tree/main)
+[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.5-blue.svg)](https://kotlinlang.org/docs/reference/whatsnew15.html)
+[![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin)
+[![APM](https://img.shields.io/apm/l/vim-mode)](LICENSE)
+[![codecov](https://codecov.io/gh/thiyagu06/zally-gradle-plugin/branch/main/graph/badge.svg?token=18W2FTN9QL)](https://codecov.io/gh/thiyagu06/zally-gradle-plugin)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.thiyagu06/zally-gradle-plugin.svg?label=Maven%20Central)](https://search.maven.org/artifact/io.github.thiyagu06/zally-gradle-plugin)
 
-With more and more adoption towards micro services, software products being more and more just a bunch of micro-services and third-party APIs mashed together, it gets more crucial for us to get their structure in order.With API as product as get traction among the industry standardization of the API in the organization also become inevitable.
+
+Runs [zally](https://github.com/zalando/zally) linter as gradle task and export the report in different format. 
+
+## Advantages
+ - no need to host and maintain zally server
+ - export violation reports into different file format (json, html)
+ - Integrate zally as part of your build task for faster feedback.
+ - no external dependency like nodejs or go for running webUI and CLI
 
 ### How to run locally 
 ```
@@ -37,6 +50,38 @@ zallyLint {
 
 ```
 
+### How to release
+
+Releasing to maven central is automated via circleci. 
+Since this is public project, I disabled few environment variables in circleci to prevent access to nexus credentials.
+
+1. Create a separate branch with a name `release-<release-version>`.
+2. Update current version in `server/gradle.properties` from `-dev` to a final version.
+3. Commit `server/gradle.properties` with the release version
+4. Push the changes to remote origin.
+   ```shell script
+    git push origin `release-<release-version>`
+    ```
+5. create PR towards main branch and wait till circleci complete the `build` and `release` step.
+6. Go to [https://app.circleci.com/](https://app.circleci.com/pipelines/github/thiyagu06/zally-gradle-plugin) and approve the job `releaseApproval`
+5. Once the job is approved, circleci will publish the artifacts to maven central
+6. Merge the PR into main branch
+7. Checkout the latest main branch from remote origin in your local machine
+   ```shell script
+    git pull origin main
+    ```
+8. Create a tag
+    ```shell script
+    git tag v<release-version> -m "Version <release-version>"
+    ```
+9. Push the tag
+   ```shell script
+    git push origin <tag-name>
+   ```
+
+## License
+
+MIT license with an exception. See [license file](LICENSE).
 ### TODO
 
 - [x] write unit test
@@ -50,10 +95,6 @@ zallyLint {
 - [x] publish to maven central
 
 - [ ] allow plugin to define threshold for SHOULD and MUST severity violations. If threshold breaches, build should fail
-
-- [x] improve exception handling wherever possible (e.g file operations)
-
-- [ ] release script
 
 - [x] configure circleci
 
