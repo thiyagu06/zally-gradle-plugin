@@ -100,4 +100,4 @@ MIT license with an exception. See [license file](LICENSE).
 
 - [x] create sample project to showcase the plugin
 
-- [ ]  enable dependabot
+- [x]  enable dependabot
