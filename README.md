@@ -9,6 +9,8 @@
 
 Runs [zally](https://github.com/zalando/zally) linter as gradle task and export the report in different format. 
 
+https://medium.com/@thiyagu103/standardize-your-api-specification-using-gradle-tasks-and-linters-5c3d9e3ade99
+
 ## Advantages
  - no need to host and maintain zally server
  - export violation reports into different file format (json, html)
