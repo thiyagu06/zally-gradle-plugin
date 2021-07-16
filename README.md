@@ -52,7 +52,8 @@ zallyLint {
 
 ### How to release
 
-Releasing to maven central is automated via circleci
+Releasing to maven central is automated via circleci. 
+Since this is public project, I disabled few environment variables in circleci to prevent access to nexus credentials.
 
 1. Create a separate branch with a name `release-<release-version>`.
 2. Update current version in `server/gradle.properties` from `-dev` to a final version.
