@@ -7,7 +7,7 @@ open class ZallyLint  {
 
     var inputSpec: File? = null
 
-    var ignoredRules: Array<String> = emptyArray()
+    var ignoredRules: String? = null
 
     val reports = ZallyReports()
 
