@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: gradle
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: sunday
+      time: "04:00"
+      timezone: Asia/Kolkata
+    open-pull-requests-limit: 20
+    reviewers:
+      - thiyagu06
+    labels:
+      - dependencies
