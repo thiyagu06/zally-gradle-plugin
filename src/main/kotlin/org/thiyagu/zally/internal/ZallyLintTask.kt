@@ -25,7 +25,8 @@ open class ZallyLintTask : DefaultTask() {
             val specContent =
                 inputSpec?.bufferedReader()?.readText()
                     ?: throw IllegalArgumentException("input spec should be provided")
-            val decoratedRulesPolicy = ZallyFactory.rulesPolicy.withMoreIgnores(userConfig.ignoredRules.toList())
+            val ignoredRules = userConfig.ignoredRules?.split(",")?.toList() ?: emptyList()
+            val decoratedRulesPolicy = ZallyFactory.rulesPolicy.withMoreIgnores(ignoredRules)
             val violations = ZallyFactory.compositeRulesValidator.validate(specContent, decoratedRulesPolicy)
             if (violations.isNotEmpty()) {
                 ConsoleReporter().render(violations)

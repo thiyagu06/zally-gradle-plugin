@@ -1,6 +1,6 @@
 # zally-gradle-plugin
 
-WIP
+With more and more adoption towards micro services, software products being more and more just a bunch of micro-services and third-party APIs mashed together, it gets more crucial for us to get their structure in order.With API as product as get traction among the industry standardization of the API in the organization also become inevitable.
 
 ### How to run locally 
 ```
@@ -47,7 +47,7 @@ zallyLint {
 
 - [x] add jacoco for test coverage
 
-- [ ] publish to maven central
+- [x] publish to maven central
 
 - [ ] allow plugin to define threshold for SHOULD and MUST severity violations. If threshold breaches, build should fail
 
@@ -55,6 +55,8 @@ zallyLint {
 
 - [ ] release script
 
-- [ ] configure travis/circleci
+- [x] configure circleci
 
 - [x] create sample project to showcase the plugin
+
+- [ ]  enable dependabot

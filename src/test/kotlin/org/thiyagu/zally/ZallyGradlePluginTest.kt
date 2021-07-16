@@ -259,6 +259,7 @@ class ZallyGradlePluginTest {
                         }
                         zallyLint {
                             inputSpec = File("${tempDir}/notitle.yml")
+                            ignoredRules = "M101,M101"
                             reports{
                                 html {
                                     enabled = true
