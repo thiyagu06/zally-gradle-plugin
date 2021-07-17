@@ -124,7 +124,7 @@ publishing {
 }
 
 signing {
-    //sign(publishing.publications)
+    sign(publishing.publications)
 }
 
 fun setPomDetails(mavenPublication: MavenPublication) {
