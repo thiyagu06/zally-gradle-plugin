@@ -4,8 +4,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.thiyagu.zally.internal.ZallyLint
 import org.thiyagu.zally.internal.ZallyLintTask
-import org.thiyagu.zally.reports.ZallyReport
-import java.io.File
 
 class ZallyGradlePlugin : Plugin<Project> {
     override fun apply(project: Project) {

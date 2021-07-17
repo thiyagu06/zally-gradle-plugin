@@ -1,6 +1,10 @@
 package org.thiyagu.zally.internal
 
 import com.typesafe.config.ConfigFactory
+import org.thiyagu.zally.rules.HintRuleChecker
+import org.thiyagu.zally.rules.MayRuleChecker
+import org.thiyagu.zally.rules.MustRuleChecker
+import org.thiyagu.zally.rules.ShouldRuleChecker
 import org.zalando.zally.core.CompositeRulesValidator
 import org.zalando.zally.core.ContextRulesValidator
 import org.zalando.zally.core.DefaultContextFactory
@@ -16,4 +20,5 @@ object ZallyFactory {
     val compositeRulesValidator =
         CompositeRulesValidator(contextRulesValidator, JsonRulesValidator(rulesManager))
     val rulesPolicy = RulesPolicy(emptyList())
+    val violationRuleCheckers = listOf(MustRuleChecker, ShouldRuleChecker, MayRuleChecker, HintRuleChecker)
 }
