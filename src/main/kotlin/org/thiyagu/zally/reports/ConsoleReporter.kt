@@ -32,7 +32,9 @@ class ConsoleReporter : Reporter {
         }else {
             val pad1 = "SEVERITY".length
             val pad2 = "COUNT".length
-            val violationCountByType = violations.sortedBy { it.violationType }.groupingBy { it.violationType }.eachCount()
+            val violationCountByType = violations.sortedBy { it.violationType }
+                                                 .groupingBy { it.violationType }
+                                                 .eachCount()
             println(colorize("-------- -----", BOLD(), GREEN_TEXT()))
             println(colorize("SEVERITY COUNT", BOLD(), BRIGHT_MAGENTA_TEXT()))
             println(colorize("-------- -----", BOLD(), GREEN_TEXT()))
