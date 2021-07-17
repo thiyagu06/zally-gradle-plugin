@@ -3,7 +3,7 @@ group = "io.github.thiyagu06"
 
 plugins {
     `application`
-    id("io.github.thiyagu06") version "${replace_version_here}"
+    id("io.github.thiyagu06") version "1.2-dev"
 }
 
 repositories {
@@ -29,6 +29,12 @@ zallyLint {
             }
             may {
                 max = 40
+            }
+            hint {
+                max = 10
+            }
+            must {
+                max = 20
             }
         }
     }

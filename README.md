@@ -14,7 +14,8 @@ https://medium.com/@thiyagu103/standardize-your-api-specification-using-gradle-t
 ## Advantages
  - no need to host and maintain zally server
  - export violation reports into different file format (json, html)
- - Integrate zally as part of your build task for faster feedback.
+ - setup rules to define max number of violation allowed in the spec for each severity
+ - Integrate zally as part of your build task for faster feedback
  - no external dependency like nodejs or go for running webUI and CLI
 
 ### How to run locally 
@@ -43,6 +44,11 @@ zallyLint {
         json {
             enabled = true
             destination = File("${rootDir}/zally/violation.json")
+        }
+        rules {
+            must {
+               max = 10
+            }
         }
     }
 }
@@ -96,7 +102,7 @@ MIT license with an exception. See [license file](LICENSE).
 
 - [x] publish to maven central
 
-- [ ] allow plugin to define threshold for SHOULD and MUST severity violations. If threshold breaches, build should fail
+- [x] allow plugin to define threshold for SHOULD and MUST severity violations. If threshold breaches, build should fail
 
 - [x] configure circleci
 
