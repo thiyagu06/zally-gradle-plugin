@@ -14,10 +14,8 @@ object MustRuleChecker : RuleChecker {
         return if (violationByCount.getOrDefault(MUST, 0) >= mustRule.max) {
             println(
                 colorize(
-                    """
-                      spec has ${violationByCount[MUST]} has violations which 
-                      is larger than allowed ${mustRule.max} value  
-                    """.trimIndent(),
+                    "spec has ${violationByCount[MUST]} $MUST violations." +
+                        "but only ${mustRule.max} violations allowed",
                     RED_TEXT(),
                     BOLD()
                 )

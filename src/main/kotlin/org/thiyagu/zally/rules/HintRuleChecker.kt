@@ -13,11 +13,8 @@ object HintRuleChecker : RuleChecker {
         val hintRule = rules.hint
         return if (violationByCount.getOrDefault(HINT, 0) >= hintRule.max) {
             println(
-                colorize(
-                    """
-                      "spec has ${violationByCount[HINT]} has violations 
-                      which is larger than allowed ${hintRule.max} value"  
-                    """.trimIndent(),
+                colorize("spec has ${violationByCount[HINT]} $HINT violations." +
+                    "but only ${hintRule.max} violations allowed",
                     RED_TEXT(),
                     BOLD()
                 )

@@ -23,5 +23,13 @@ zallyLint {
             enabled = true
             destination = File("${rootDir}/zally/violation.html")
         }
+        rules {
+            should {
+                max = 5
+            }
+            may {
+                max = 40
+            }
+        }
     }
 }

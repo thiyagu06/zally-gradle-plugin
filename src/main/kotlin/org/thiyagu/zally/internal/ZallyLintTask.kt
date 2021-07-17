@@ -40,9 +40,7 @@ open class ZallyLintTask : DefaultTask() {
                 }
                 val violationsBySeverity = violations.groupingBy { it.violationType }.eachCount()
                 if (ZallyFactory.violationRuleCheckers.any { it.check(violationsBySeverity, violationRules) }) {
-                    throw GradleException("spec has violation which must be fixed. see console for more info").also {
-                        println(colorize(it.message, RED_TEXT(), BOLD()))
-                    }
+                    throw GradleException("spec has violation which must be fixed. see console for more info")
                 }
             } else {
                 println(colorize("No violation identified in the spec. Great stuff!! \\U+1F389", GREEN_TEXT(), BOLD()))

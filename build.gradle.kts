@@ -70,6 +70,7 @@ tasks.jacocoTestReport {
             exclude("org/thiyagu/zally/internal/ZallyFactory.class")
             exclude("org/thiyagu/zally/reports/ZallyReport.class")
             exclude("org/thiyagu/zally/reports/ZallyReportType.class")
+            exclude("org/thiyagu/zally/rules/ZallyViolationRule.class")
             exclude()
         }
     )
@@ -123,7 +124,7 @@ publishing {
 }
 
 signing {
-    sign(publishing.publications)
+    //sign(publishing.publications)
 }
 
 fun setPomDetails(mavenPublication: MavenPublication) {

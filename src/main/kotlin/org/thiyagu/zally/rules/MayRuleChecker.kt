@@ -13,11 +13,8 @@ object MayRuleChecker : RuleChecker {
         val mayRule = rules.may
         return if (violationByCount.getOrDefault(MAY, 0) >= mayRule.max) {
             println(
-                colorize(
-                    """
-                     spec has ${violationByCount[MAY]} has violations 
-                     which is larger than allowed ${mayRule.max} value   
-                    """.trimIndent(),
+                colorize("spec has ${violationByCount[MAY]} has violations." +
+                    "but only ${mayRule.max} violations allowed",
                     RED_TEXT(),
                     BOLD()
                 )
