@@ -90,22 +90,3 @@ Since this is public project, I disabled few environment variables in circleci t
 ## License
 
 MIT license with an exception. See [license file](LICENSE).
-### TODO
-
-- [x] write unit test
-
-- [x] export violation report as html
-
-- [x] add ktlint and detekt to improve code quality
-
-- [x] add jacoco for test coverage
-
-- [x] publish to maven central
-
-- [x] allow plugin to define threshold for SHOULD and MUST severity violations. If threshold breaches, build should fail
-
-- [x] configure circleci
-
-- [x] create sample project to showcase the plugin
-
-- [x]  enable dependabot
