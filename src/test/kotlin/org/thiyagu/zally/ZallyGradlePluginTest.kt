@@ -290,4 +290,117 @@ class ZallyGradlePluginTest {
         assertTrue { violationsJsonFile.exists() }
         assertThat(buildResult.task(":zallyLint")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
     }
+
+    @Test
+    fun `should fail the build when violation rules passed`(@TempDir tempDir: File) {
+        val spec = """
+    swagger: "2.0"
+    info:
+      description: Test Description
+      version: "1.0.0"
+      contact:
+        name: John Smith
+        email: smith@example.com
+    paths:
+      /articles:
+        get:
+          summary: returns list of articles
+          responses:
+            200:
+              description: Success
+            """.trimIndent()
+        File(tempDir, "build.gradle.kts").run {
+            writeText(
+                """
+                        plugins {
+                           id("io.github.thiyagu06")
+                        }
+                        zallyLint {
+                            inputSpec = File("${tempDir}/notitle.yml")
+                            ignoredRules = "M101,M101"
+                            rules {
+                                should {
+                                    max = 50
+                                }
+                            }
+                        }
+                        """
+            )
+        }
+        File(tempDir, "notitle.yml").apply {
+            parentFile.mkdirs()
+            createNewFile()
+            appendText(spec)
+        }
+        val buildResult = GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("zallyLint")
+            .build()
+        println(buildResult.output)
+        assertThat(buildResult.task(":zallyLint")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
+        assertThat(buildResult.output)
+            .doesNotContain("spec has violation which must be fixed. see console for more info")
+    }
+
+    @Test
+    fun `should not fail the build when violation rules is not passed`(@TempDir tempDir: File) {
+        val spec = """
+    swagger: "2.0"
+    info:
+      description: Test Description
+      version: "1.0.0"
+      contact:
+        name: John Smith
+        email: smith@example.com
+    paths:
+      /articles:
+        get:
+          summary: returns list of articles
+          responses:
+            200:
+              description: Success
+            """.trimIndent()
+        File(tempDir, "build.gradle.kts").run {
+            writeText(
+                """
+                        plugins {
+                           id("io.github.thiyagu06")
+                        }
+                        zallyLint {
+                            inputSpec = File("${tempDir}/notitle.yml")
+                            ignoredRules = "M101,M101"
+                            reports{
+                                html {
+                                    enabled = true
+                                    destination = File("${tempDir}/violation.html")
+                                }
+                                json {
+                                    enabled = true
+                                    destination = File("${tempDir}/violation.json")
+                                }
+                            }
+                            rules {
+                                should {
+                                    max = 50
+                                }
+                            }
+                        }
+                        """
+            )
+        }
+        File(tempDir, "notitle.yml").apply {
+            parentFile.mkdirs()
+            createNewFile()
+            appendText(spec)
+        }
+        val buildResult = GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("zallyLint")
+            .build()
+        assertThat(buildResult.task(":zallyLint")!!.outcome).isEqualTo(TaskOutcome.SUCCESS)
+        assertThat(buildResult.output)
+            .doesNotContain("spec has violation which must be fixed. see console for more info")
+    }
 }

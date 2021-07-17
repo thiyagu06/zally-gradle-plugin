@@ -11,7 +11,10 @@ open class ZallyLint  {
 
     val reports = ZallyReports()
 
+    val violationRules = ZallyViolationRules()
+
     fun reports(configure: Action<ZallyReports>) = configure.execute(reports)
 
+    fun rules(configure: Action<ZallyViolationRules>) = configure.execute(violationRules)
 }
 
