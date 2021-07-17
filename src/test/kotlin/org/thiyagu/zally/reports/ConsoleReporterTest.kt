@@ -132,4 +132,11 @@ class ConsoleReporterTest {
         assertThat(consoleContents).contains(Severity.SHOULD.name)
         assertThat(consoleContents).contains(Severity.HINT.name)
     }
+
+    @Test
+    fun `should print success message violations is empty`() {
+        ConsoleReporter().write(emptyList(), File("violation.json").toPath())
+        val consoleContents = outContent.toString()
+        assertThat(consoleContents).contains("No violation identified in the spec. Great stuff!! \\U+1F389")
+    }
 }

@@ -30,22 +30,18 @@ open class ZallyLintTask : DefaultTask() {
             val ignoredRules = userConfig.ignoredRules?.split(",")?.toList() ?: emptyList()
             val decoratedRulesPolicy = ZallyFactory.rulesPolicy.withMoreIgnores(ignoredRules)
             val violations = ZallyFactory.compositeRulesValidator.validate(specContent, decoratedRulesPolicy)
-            if (violations.isNotEmpty()) {
-                ConsoleReporter().render(violations)
-                reports.enabled().forEach {
-                    val reporter = ReportFactory.getReporter(it.reportType)
-                    val filePath =
-                        it.destination?.toPath() ?: it.reportType.defaultFile(defaultReportDirectory).toPath()
-                    reporter.write(violations, filePath)
-                }
-                val violationsBySeverity = violations.groupingBy { it.violationType }.eachCount()
-                if (ZallyFactory.violationRuleCheckers.any { it.check(violationsBySeverity, violationRules) }) {
-                    throw GradleException("spec has violation which must be fixed. see console for more info")
-                }
-            } else {
-                println(colorize("No violation identified in the spec. Great stuff!! \\U+1F389", GREEN_TEXT(), BOLD()))
+            ConsoleReporter().render(violations)
+            reports.enabled().forEach {
+                val reporter = ReportFactory.getReporter(it.reportType)
+                val filePath =
+                    it.destination?.toPath() ?: it.reportType.defaultFile(defaultReportDirectory).toPath()
+                reporter.write(violations, filePath)
             }
-            println(colorize("zally lint has been executed for $inputSpec", BRIGHT_MAGENTA_TEXT(), BOLD()))
+            val violationsBySeverity = violations.groupingBy { it.violationType }.eachCount()
+            if (ZallyFactory.violationRuleCheckers.any { it.check(violationsBySeverity, violationRules) }) {
+                throw GradleException("spec has violation which must be fixed. see console for more info")
+            }
         }
+        println(colorize("zally lint has been executed for ${userConfig.inputSpec}", BRIGHT_MAGENTA_TEXT(), BOLD()))
     }
 }
