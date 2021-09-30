@@ -32,7 +32,7 @@ dependencies {
     implementation("com.diogonunes:JColor:5.0.1")
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
-    testImplementation("org.assertj:assertj-core:3.20.2")
+    testImplementation("org.assertj:assertj-core:3.21.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.3")
