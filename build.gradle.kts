@@ -28,7 +28,7 @@ dependencies {
     implementation("org.zalando:zally-core:2.0.0")
     implementation("org.zalando:zally-ruleset-zally:2.0.0")
     implementation("org.zalando:zally-ruleset-zalando:2.0.0")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.12.4")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.13.3")
     implementation("com.diogonunes:JColor:5.0.1")
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
