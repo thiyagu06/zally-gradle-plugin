@@ -25,7 +25,7 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     testImplementation(kotlin("test"))
-    implementation("org.zalando:zally-core:2.0.0")
+    implementation("org.zalando:zally-core:2.1.1")
     implementation("org.zalando:zally-ruleset-zally:2.0.0")
     implementation("org.zalando:zally-ruleset-zalando:2.0.0")
     implementation("com.fasterxml.jackson.core:jackson-core:2.12.4")
